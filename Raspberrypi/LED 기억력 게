@@ -1,0 +1,95 @@
+#include<wiringPi.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<time.h>
+#define LED1 15
+#define LED2 16
+#define LED3 1
+#define SW1 27
+#define SW2 28
+#define SW3 29
+#define SUCCESSLED 4
+#define FAILEDLED  5
+int ledControl(int gpio)
+{
+    int i;
+    pinMode(gpio, OUTPUT);
+    digitalWrite(gpio,HIGH);
+    delay(1000);
+    digitalWrite(gpio, LOW);
+    delay(1000);
+    return 0;
+}
+int gamefuc(int *arr)
+{
+    int i = 0;
+    int flag = 0;
+    int answer[3];
+    pinMode(SW1, INPUT); 
+    pinMode(SW2, INPUT); 
+    pinMode(SW3, INPUT); 
+    for (;;) 
+    { 
+        if(i == 3) break;
+        else if(digitalRead(SW1) == LOW) 
+        { 
+            digitalWrite(LED1, HIGH); 
+            delay(500);
+            digitalWrite(LED1, LOW);
+            answer[i] = 0; 
+            i++;
+        }
+        else if(digitalRead(SW2) == LOW) 
+        { 
+            digitalWrite(LED2, HIGH); 
+            delay(500);
+            digitalWrite(LED2, LOW); 
+            answer[i] = 1; 
+            i++;
+        }
+        else if(digitalRead(SW3) == LOW) 
+        { 
+            digitalWrite(LED3, HIGH); 
+            delay(500);
+            digitalWrite(LED3, LOW); 
+            answer[i] = 2; 
+            i++;
+        }
+        delay(10); 
+    }
+    for(int j = 0; j<3;j++)
+    {
+        if(answer[j] == arr[j]) flag++;
+    }
+    if(flag == 3)
+    {
+        ledControl(SUCCESSLED);
+        ledControl(SUCCESSLED);
+        ledControl(SUCCESSLED);
+    }
+    else 
+    {
+        ledControl(FAILEDLED);
+        ledControl(FAILEDLED);
+        ledControl(FAILEDLED);
+    }
+    return 0;
+}
+int main()
+{
+    srand(time(NULL));
+    int gno;
+    int num[3];
+    for(int i =0;i<3;i++) num[i] = rand() % 2;
+   
+    wiringPiSetup();
+    for(int i = 0;i<3;i++)
+    {
+        if(num[i] == 0) gno = LED1;
+        else if(num[i] == 1) gno = LED2;
+        else if(num[i] == 2) gno = LED3;
+        ledControl(gno);
+    }
+    gamefuc(num);
+    return 0;
+}
