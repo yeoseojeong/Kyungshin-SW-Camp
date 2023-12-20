@@ -1,0 +1,112 @@
+
+#include <wiringPi.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <softTone.h>
+int TRIG = 29; //gpio 21 pin 40
+int ECHO = 28; //gpio 20 pin 38
+#define SW 5 /* GPIO24 */
+#define CDS 0 /* GPIO17 */
+#define LED 1 /* GPIO18 */
+#define SPKR 6 /* GPIO25 */
+
+#define TOTAL 32 /* 학교종의 전체 계이름의 수 */
+int notes[] = {130.81,1046.50};
+
+
+static int Echo_Test()
+{
+    unsigned long TX_time = 0;
+    unsigned long RX_time = 0;
+    float distance = 0;
+    unsigned long timeout = 50000000; // 0.5 sec ~ 171 m 50*10^6 us
+    unsigned long Wait_time=micros();
+    pinMode(TRIG, OUTPUT); //gpio 21 pin 40 using trigger
+    pinMode(ECHO, INPUT); //gpio 20 pin 38 using Echo ultra sound
+
+// Ensure trigger is low.
+digitalWrite(TRIG, LOW);
+delay(50); //mili sec
+// Trigger tx sound.
+digitalWrite(TRIG, HIGH);
+delayMicroseconds(10);
+digitalWrite(TRIG, LOW);
+// Wait for tx response, or timeout.
+while ((digitalRead(ECHO) == LOW && (micros()-Wait_time) < timeout)) {
+if(digitalRead(ECHO) == HIGH) break;
+}
+// Cancel on timeout.
+if ((micros()-Wait_time) > timeout) {
+printf("0 Out of range.micros =%d wait-time=%d \n",micros(),Wait_time);
+//return 0;
+}
+TX_time = micros(); //since call wiringPiSetup, the number of microseconds
+// Wait for rx sound response, or timeout.
+while ((digitalRead(ECHO) == HIGH && (micros()-Wait_time)) < timeout) {
+if(digitalRead(ECHO) == LOW) break;
+}
+// Cancel on timeout.
+if ((micros()-Wait_time) > timeout) {
+printf("1.Out of range.\n");
+//return 0;
+}
+RX_time = micros();
+// Calculate rx-tx duration to change distance.
+distance = (float) (RX_time - TX_time) * 0.017; //( 340m/2) *100cm/10^6 us
+printf("Range %.2f cm.\n", distance);
+
+
+
+
+
+softToneCreate(SPKR); /* 톤 출력을 위한 GPIO 설정 */
+if (distance <10)
+{   
+    softToneWrite(SPKR, notes[0]); 
+}
+else if (distance<50)
+{
+    softToneWrite(SPKR, notes[1]); 
+}
+
+
+return 1;
+}
+
+int switchControl( )
+{
+int i;
+pinMode(SW, INPUT); /* Pin 모드를 입력으로 설정 */
+pinMode(LED, OUTPUT);
+for (;;) { /* 스위치의 확인을 위해 무한 루프를 수행한다. */
+if(digitalRead(SW) == LOW) 
+{ /* Push 버튼이 눌러지면(LOW) */
+    Echo_Test();
+}
+delay(10); /* Ctrl+C 등의 이벤트를 감지하기 위해 잠시 쉰다. */
+}
+return 0;
+}
+
+
+
+
+
+int main( )
+{
+    printf (" HC-SR04 Ultra-sonic distance measure program \n");
+    if (wiringPiSetup () == -1) {
+        exit(EXIT_FAILURE);
+    }
+    if (setuid(getuid()) < 0) {
+        perror("Dropping privileges failed.\n");
+        exit(EXIT_FAILURE);
+    }
+    wiringPiSetup( );
+    switchControl( );
+
+return 0;
+}
