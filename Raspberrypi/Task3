@@ -1,0 +1,51 @@
+#include<stdio.h>
+int main()
+{
+    int a,b,c;
+
+    scanf("%d",&a);
+    scanf("%d",&b);
+    scanf("%d",&c);
+
+
+    float avg=(a+b+c)/3.0;
+    
+    
+
+printf("The average score is %.2f and the grade ais ",avg);
+
+    if(avg>=95)
+    {
+        printf("A+");
+    }
+    else if(avg>=90)
+    {
+       printf("A0");
+    }
+    else if(avg>=85)
+    {
+         printf("B+");
+    }
+     else if(avg>=80)
+    {
+        printf("B0");
+    }
+     else if(avg>=75)
+    {
+         printf("C+");
+    }
+      else if(avg>=70)
+    {
+         printf("C0");
+    }
+    else
+    {
+      printf("F");
+    }
+
+
+
+
+}
+
+
