@@ -1,0 +1,47 @@
+#include<stdio.h>
+#define n 5
+
+int main()
+{
+    int a[n][n];
+    int avg=0,max=0,sum=0;
+    printf("Enter %d numbers: ",n);
+
+    for(int i=0; i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            scanf("%d",&a[i][j]);
+        }
+        
+    }
+    
+    for(int i=0; i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            sum+=a[i][j];
+        }
+        
+    }
+    
+
+   avg=sum/25;
+
+   for(int i=0; i<n;i++)
+    {
+        for(int j=0;j<n;j++)
+        {
+            if(a[i][j]>max)
+            {
+                max=a[i][j];
+            }
+        }
+        
+    }
+    
+
+    printf("%d %d\n",avg ,max);
+    return 0;
+}
+
