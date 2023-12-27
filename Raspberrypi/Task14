@@ -1,0 +1,33 @@
+#include<stdio.h>
+void print_binary(short i)
+{
+    int j;
+    for(int j=15;j>=0;j--)
+    {
+        if(i&(1<<j))
+        {
+            printf("1");
+        }
+        else 
+        {
+            printf("0");
+        }
+    }
+    printf("\n");
+}
+
+
+
+
+int main()
+{
+   short i,twos;
+
+    scanf("%d",&i);
+    twos= (~i) + 0x1;
+
+    print_binary(twos);
+    printf("%d",twos);
+
+ return 0;
+}
