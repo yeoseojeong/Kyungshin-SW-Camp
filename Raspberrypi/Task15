@@ -1,0 +1,30 @@
+#include<stdio.h>
+int main()
+{
+    int n;
+
+    short res;
+    short result[101];
+
+    scanf("%d",&n);
+
+
+    res=(~n)+0x0001;
+
+
+    for(int i=0;i<16;i++)
+    {
+        result[i]=(res>>i)&1;
+    }
+
+
+    printf("binary: ");
+    for(int i=15;i>=0;i--)
+    {
+        printf("%d",result[i]);
+    }
+    printf("\n");
+   printf("integer: %d",res);
+
+ return 0;
+}
