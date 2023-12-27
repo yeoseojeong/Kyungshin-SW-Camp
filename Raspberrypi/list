@@ -1,0 +1,45 @@
+#include <stdio.h>
+#include<stdlib.h>
+
+struct node
+{
+    int value;
+    struct node* next;
+};
+
+struct node* add_to_list(struct node* list, int n)
+{
+    struct node* new_node;
+
+    new_node = malloc(sizeof(struct node)); 
+    if (new_node == NULL)
+    {
+        printf("Error: malloc failed in add_to_list\n");
+        exit(EXIT_FAILURE);
+    }
+    new_node->value = n;
+    new_node->next = list;
+
+    return new_node;
+}
+
+int main(void)
+{
+    struct node* first = NULL;
+    struct node* p;
+    int n;
+
+    printf("Enter numbers : \n");
+    while (1)
+    {
+        scanf("%d", &n);
+        if (n == 0)
+            break;
+        first = add_to_list(first, n);
+    }
+
+    printf("printf number\n");
+    for (p = first; p != NULL; p = p->next)
+        printf(" %d", p->value);
+    return 0;
+}
