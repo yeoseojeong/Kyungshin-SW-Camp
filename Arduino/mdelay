@@ -50,7 +50,7 @@ CPU mySystem {
        PRIORITY = 1;
        STACK = SHARED;
        SCHEDULE = FULL;
-       AUTOSTART = FALSE;
+       AUTOSTART = TRUE;
        ACTIVATION = 1;
     };
     
