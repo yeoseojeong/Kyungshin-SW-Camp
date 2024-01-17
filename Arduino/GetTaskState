@@ -1,0 +1,208 @@
+//asw.c
+
+#include "bsw.h"
+
+ISR2(TimerISR)
+{
+	static long c=-4;
+	if(c==0)
+	{
+		ActivateTask(Task1);
+	}
+		printfSerial("\n%4ld: ",c++);
+}
+TASK(TaskM)
+{
+	printState(Task1);
+	printState(Task2);
+
+	TerminateTask();
+}
+
+TASK(Task1){
+	TaskType id;
+   printfSerial("Task Begins...\n");
+   printState(Task1);
+   printState(Task2);
+   mdelay(3000);
+   ActivateTask(Task2);
+   printState(Task1);
+      printState(Task2);
+   mdelay(3000);
+   GetTaskID(&id);
+   printfSerial("Task ID = %d...",id);
+   printfSerial("Task1 Finishes...\n");
+   ChainTask(TaskM);
+}
+
+TASK(Task2){
+	TaskType id;
+	printfSerial("Task2 Begins...\n");
+	printState(Task1);
+	   printState(Task2);
+	mdelay(3000);
+	GetTaskID(&id);
+	   printfSerial("Task ID = %d...",id);
+	printfSerial("Task2 Finishes...\n");
+	 ChainTask(TaskM);
+}
+
+void printState(TaskType id){
+	TaskStateType state;
+
+	if(GetTaskState(id,&state)==E_OK){
+		switch (state){
+		case SUSPENDED:
+			printfSerial("%d: suspended...",id);
+			break;
+		case READY:
+			printfSerial("%d: ready...",id);
+			break;
+		case WAITING:
+			printfSerial("%d: waiting...",id);
+			break;
+		case RUNNING:
+			printfSerial("%d: running...",id);
+			break;
+		}
+	}
+}
+
+
+
+
+
+
+//conf.oil
+
+CPU mySystem {
+    OS myOs {
+		EE_OPT = "OS_EE_APPL_BUILD_DEBUG";
+		EE_OPT = "OS_EE_BUILD_DEBUG";
+
+        USERESSCHEDULER = TRUE;
+        CPU_DATA = AVR8 {
+            MULTI_STACK = FALSE;
+        };
+        MCU_DATA = MEGA {
+            MODEL = MEGA_328p;
+        };
+        LIB = ARDUINO {
+            SDK_BOARD = UNO;
+            VARIANT = CC {
+                VERSION = "1.8.5";
+            };
+            STAND_ALONE = TRUE;        // Generate arduino libraries
+        };
+        KERNEL_TYPE = OSEK {
+            CLASS = ECC2;    // Default
+        };
+    };
+    
+    APPDATA myApp {
+        APP_SRC = "bsw.cpp";
+        APP_SRC = "asw.c";
+    };
+    
+    TASK Task1{
+       PRIORITY = 1;
+       STACK = SHARED;
+       SCHEDULE = FULL;
+       AUTOSTART = FALSE;
+       ACTIVATION = 1;
+    };
+    
+   
+    
+    TASK Task2{
+    	PRIORITY = 2;
+       STACK = SHARED;
+       SCHEDULE = FULL;
+       AUTOSTART = FALSE;
+       ACTIVATION = 1;
+    };
+    
+    ISR TimerISR{
+    	CATEGORY = 2;
+    	SOURCE="TIMER1_COMPA";
+    };
+    
+ 
+    TASK TaskM{
+    	PRIORITY = 3;
+       STACK = SHARED;
+       SCHEDULE = FULL;
+       AUTOSTART = FALSE;
+       ACTIVATION = 1;
+    };
+    
+  
+};
+
+
+//bsw.h
+
+#include "ee.h"
+#include "Arduino.h"
+#include "bsw.h"
+
+#define TIMER1_US	1000000U	/* 1 sec */
+
+#define LEN_BUF 128
+
+extern "C"{
+
+void mdelay(unsigned long delay_ms)
+{
+	unsigned long prev_ms = millis(), current_ms = millis();
+	unsigned long period_ms = 20, cnt = 0;
+	while (cnt < (delay_ms / period_ms)) {
+		current_ms = millis();
+		if (current_ms - prev_ms >= period_ms) {
+			cnt++;
+			prev_ms = millis();
+		}
+	}
+}
+
+void printfSerial(const char *fmt, ... )
+{
+    char buf[LEN_BUF];
+    va_list args;
+    va_start (args, fmt );
+    vsnprintf(buf, LEN_BUF, fmt, args);
+    va_end (args);
+    Serial.print(buf);
+}
+
+} /* extern "C" */
+
+void loop(void)
+{
+	;
+}
+
+void setup(void)
+{
+	Serial.begin(9600);
+	OsEE_atmega_startTimer1(TIMER1_US);
+}
+
+int main(void)
+{
+	init();
+
+#if defined(USBCON)
+	USBDevice.attach();
+#endif
+	
+	setup();
+
+	printfSerial("\n...............\n");
+	printfSerial("...OS Starts...\n");
+	printfSerial("...............\n");
+
+	StartOS(OSDEFAULTAPPMODE);	/* never returns */
+
+	return 0;
+}
