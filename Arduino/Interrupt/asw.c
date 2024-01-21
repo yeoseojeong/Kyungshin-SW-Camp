@@ -1,5 +1,3 @@
-//asw.c
-
 #include "bsw.h"
 
 TASK (Task1)
