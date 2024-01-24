@@ -25,7 +25,7 @@ UART 통신은 각 모듈이 1:1 통신을 해서 모듈이 추가될 때 마다
 
 여러 개의 CAN 장치(Device)가 서로 통신 가능
 
-하나의 CAN Interface로 여러개의 모듈 제어 가능, 연결선 수 감소, 무게 경감, 원가 하락, 시스템 효율적 제어 가능
+하나의 CAN Interface로 여러개의 모듈 제어 가능-> 연결선 수 감소, 무게 경감, 원가 하락, 시스템 효율적 제어 가능
 
 <img src="https://github.com/yeoseojeong/Kyungshin-SW-Camp/assets/121150215/0ceacde5-60a8-4fb4-af13-c5607275bb51" width=800>
 
