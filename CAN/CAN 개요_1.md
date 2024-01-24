@@ -90,3 +90,25 @@ UART 통신은 각 모듈이 1:1 통신을 해서 모듈이 추가될 때 마다
   
 
   <img src="https://github.com/yeoseojeong/Kyungshin-SW-Camp/assets/121150215/1cb37a27-1edf-4d1d-ad11-d598b74e09e4" width=800>
+
+---
+
+  ### CAN FD
+
+- **개발 목적**
+
+  기존의 CAN의 설계 경험을 유지하고, 더 높은 대역폭을 제공하는 것을 목적으로 함
+
+- **통신 속도**
+
+  5Mbps(64bytes)
+
+- **Arbitration-Phase**
+
+  standard CAN과 동일
+
+  <img src="https://github.com/yeoseojeong/Kyungshin-SW-Camp/assets/121150215/2fcc3ad2-288e-4834-ad71-f93a3c3fb353" width=800>
+
+  
+  
+
