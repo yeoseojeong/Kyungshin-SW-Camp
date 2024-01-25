@@ -1,6 +1,6 @@
 # CAN Error 의 종류
 
-<img src="https://github.com/yeoseojeong/Kyungshin-SW-Camp/assets/121150215/aa358fdc-7aad-45a9-a130-28e61e5867e6" width=800>
+<img src="https://github.com/yeoseojeong/Kyungshin-SW-Camp/assets/121150215/282d64fe-9af5-4e6c-827d-454f7d7366c5" width=800>
 
 ---
 
