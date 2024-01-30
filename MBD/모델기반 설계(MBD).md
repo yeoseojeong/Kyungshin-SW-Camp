@@ -31,3 +31,14 @@
   개발 프로세스 기간 단축
   
   개발 초기단계에서 오류 검출
+
+
+### 제품 개발 주기 관리
+
+  #### V-model
+  ![image](https://github.com/yeoseojeong/Kyungshin-SW-Camp/assets/121150215/7eb6629c-993a-4225-8493-bb84e8b7db67)
+
+  
+- 하드웨어 &소프트웨어 개발의 각 단계마다
+- MBD 적용
+- 산출물 문서화
