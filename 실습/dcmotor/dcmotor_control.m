@@ -1,0 +1,32 @@
+R=2.0;
+L=0.5;
+Km=0.1;
+Kb=0.1;
+Kf=0.2;
+J=0.02;
+
+h1=tf(Km,[L R]);
+h2=tf([j,Kf]);
+
+dcm = ss(h2)*[h1,1];
+dcm = feedback(dcm,Kb,1,1);
+
+
+Ts=1e-2;
+encoder_scale=1/12/4*2*pi;
+
+num=1;
+den=[0.05 1];
+
+G=tf(num,den);
+Gd=c2d(G,Ts)
+
+num_Gd=Gd.Num{:};
+den_Gd=Gd.Den{:};
+
+Vlim=12;
+
+Wref=100;
+
+Kp=100;
+Ki=50;
